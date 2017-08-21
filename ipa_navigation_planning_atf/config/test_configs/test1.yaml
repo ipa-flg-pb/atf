@@ -1,0 +1,40 @@
+# Syntax is: <testblock1>:
+#              <metric1>:
+#                - <parameter1a>: <value>
+#                  <parameter1b>: <value>
+#                  ..
+#                - <parameter2a>: <value>
+#                  <parameter2b>: <value>
+#                  ..
+#                ..
+#              <metric2>:
+#              ..
+#            <test_block2>:
+#            ..
+#
+# where: <testblock1> etc is the name of the testblock referenced in the application.py (e.g. 'atf.start("<testblock1>")')
+#        <metric1> etc is the name of a metric defined in the atf_metrics package (view atf_metrics/config/metrics.yaml for the list of available metrics)
+#         a metric can receive a list of parameter sets for example if you want to observe the publish_rate of multiple topics
+#        <parameter1> etc are parameters defined for the corresponding metric; the parameters groundtruth and groundtruth_epsilon are available for all metrics
+#         in case you don't want to pass any parameters:
+#            <testblock1>:
+#              <metric1>: []
+#              <metric2>:
+#              ..
+
+testblock_01:
+  time: []
+  publish_rate:
+    - topic: /scan_unified
+    - topic: /move_base/local_costmap/costmap
+  path_length:
+    - root_frame: map
+      measured_frame: base_link
+#testblock_02:
+#  time: []
+#  publish_rate:
+#    - topic: /scan_unified
+#    - topic: /move_base/local_costmap/costmap
+#  path_length:
+#    - root_frame: map
+#      measured_frame: base_link

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>ipa_navigation_planning_atf</name>
+    <version>0.1.0</version>
+    <description>Test suite for the ipa_navigation_planning repository.</description>
+
+    <maintainer email="florian.weisshardt@ipa.fraunhofer.de">Florian Weisshardt</maintainer>
+
+    <author email="florian.weisshardt@ipa.fraunhofer.de">Florian Weisshardt</author>
+    <author>Philip Bell</author>
+
+    <license>Apache 2.0</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <depend>atf_core</depend>
+    <!--<depend>ipa_navigation_planning</depend>-->
+    <depend>roslaunch</depend>
+    <depend>rospy</depend>
+
+    <test_depend>rostest</test_depend>
+
+</package>
