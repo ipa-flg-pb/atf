@@ -15,7 +15,14 @@
     <!-- launch files -->
     <include file="$(find cob_bringup_sim)/launch/robot.launch">
       <arg name="gui" default="$(arg gazebo_gui)"/>
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="robot_env" value="$(arg robot_env)"/>
     </include>
-    <include file="$(find ipa_navigation_bringup)/ipa_navigation.launch"/>
+    <include file="$(find ipa_navigation_bringup)/ipa_navigation.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="robot_env" value="$(arg robot_env)"/>
+    </include>
+    <include file="$(find ipa_navigation_bringup)/tools/rviz.launch">
+    </include>
 
 </launch>

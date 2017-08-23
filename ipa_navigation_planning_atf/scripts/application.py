@@ -16,66 +16,60 @@ class Application:
         self.atf = ATF()
 
 
-    def initializeRobot(self):
+    def initializeRobotAndGoals(self):
         self.pose_pub_ = rospy.Publisher("/initialpose", PoseWithCovarianceStamped, queue_size=1)
         self.goal_pub_ = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=1)
-        self.pose = PoseStamped()
-        self.pose_cov = PoseWithCovarianceStamped()
-        self.pose.pose.position.x = 4.0
 
-        self.pose_cov.header.stamp = rospy.Time.now()
-        self.pose_cov.header.frame_id = "map"
+        # get starting pose
+        start_pose_information = rospy.get_param("/atf_test/start_pose")
+        self.start_pose = PoseWithCovarianceStamped()
+        self.start_pose.header.frame_id = "map"
+        self.start_pose.pose.pose.position.x = start_pose_information["position_x"]
+        self.start_pose.pose.pose.position.y = start_pose_information["position_y"]
+        self.start_pose.pose.pose.position.z = 0.0
+        self.start_pose.pose.pose.orientation.x = start_pose_information["orientation_x"]
+        self.start_pose.pose.pose.orientation.y = start_pose_information["orientation_y"]
+        self.start_pose.pose.pose.orientation.z = start_pose_information["orientation_z"]
+        self.start_pose.pose.pose.orientation.w = start_pose_information["orientation_w"]
 
-        self.pose.header.frame_id = "map"
+        self.nr_of_goals = rospy.get_param("/atf_test/nr_of_goals")
 
-        quat = tf.transformations.quaternion_from_euler(0.0, 0.0, 1.0)
-        self.pose_cov.pose.pose.orientation.x = quat[0]
-        self.pose_cov.pose.pose.orientation.y = quat[1]
-        self.pose_cov.pose.pose.orientation.z = quat[2]
-        self.pose_cov.pose.pose.orientation.w = quat[3]
+        # get goals
+        self.goals = []
+        goal_information = rospy.get_param("/atf_test/goals")
+        for x in range(0, self.nr_of_goals):
+            goal_to_set = PoseStamped()
+            goal_to_set.header.frame_id = "map"
+            goal_to_set.pose.position.x = goal_information[x]["position_x"]
+            goal_to_set.pose.position.y = goal_information[x]["position_y"]
+            goal_to_set.pose.position.z = 0.0
+            goal_to_set.pose.orientation.x = goal_information[x]["orientation_x"]
+            goal_to_set.pose.orientation.y = goal_information[x]["orientation_y"]
+            goal_to_set.pose.orientation.z = goal_information[x]["orientation_z"]
+            goal_to_set.pose.orientation.w = goal_information[x]["orientation_w"]
+            self.goals.append(goal_to_set)
 
-        self.pose.pose.orientation.x = quat[0]
-        self.pose.pose.orientation.y = quat[1]
-        self.pose.pose.orientation.z = quat[2]
-        self.pose.pose.orientation.w = quat[3]
-
-        for x in range(0,4):
-            rospy.sleep(2)
-            self.pose_pub_.publish(self.pose_cov)
+        rospy.sleep(5)
+        self.start_pose.header.stamp = rospy.Time.now()
+        self.pose_pub_.publish(self.start_pose)
 
 
     def execute(self):
-
-        self.initializeRobot()
         self.atf.start("testblock_01")
-        #for x in range(0,4):
-        #    rospy.sleep(2)
-        #    self.pose_pub_.publish(self.pose_cov)
 
-        self.pose.header.stamp = rospy.Time.now()
-        self.goal_pub_.publish(self.pose)
-        for x in range(0,4):
-            rospy.sleep(4)
-            self.pose.header.stamp = rospy.Time.now()
-            self.goal_pub_.publish(self.pose)
+        for x in range(0, self.nr_of_goals):
+            self.goals[x].header.stamp = rospy.Time.now()
+            self.goal_pub_.publish(self.goals[x])
+            rospy.sleep(10) #TODO: send new goal once the previous one was reached and not after a fixed amount of time -> goal_reached_publisher in ipa_eband_planner/eband_trajectory_controller
 
         self.atf.stop("testblock_01")
-#        self.atf.start("testblock_02")
-#        rospy.sleep(1)
-#        self.pose_pub_.publish(self.pose_cov)
-#
-#        #self.pose.pose.position.x = 8.0
-#        #self.pose.pose.position.y = 0.0
-#        self.pose.header.stamp = rospy.Time.now()
-#        self.goal_pub_.publish(self.pose)
-#        rospy.sleep(20)
-#
-#        self.atf.stop("testblock_02")
         self.atf.shutdown()
 
 class Test(unittest.TestCase):
     def setUp(self):
         self.app = Application()
+        self.app.initializeRobotAndGoals()
+        rospy.sleep(5)
 
     def tearDown(self):
         pass
