@@ -5,4 +5,4 @@ testsuite_1:
   robots:                       # You have to define at least one robot
     - raw3-3
   robot_envs:                   # You have to define at least one robot_env
-    - ipa-office
+    - ipa-apartment

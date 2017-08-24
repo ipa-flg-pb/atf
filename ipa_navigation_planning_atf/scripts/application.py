@@ -9,16 +9,22 @@ from atf_core import ATF
 import tf
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from std_msgs.msg import Bool
 
 
 class Application:
     def __init__(self):
         self.atf = ATF()
 
-
-    def initializeRobotAndGoals(self):
         self.pose_pub_ = rospy.Publisher("/initialpose", PoseWithCovarianceStamped, queue_size=1)
         self.goal_pub_ = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=1)
+
+        self.goal_reached_sub_ = rospy.Subscriber("/move_base/IPAEBandPlannerROS/goal_reached_topic", Bool, self.goal_reached_callback)
+        self.goal_reached_pub_ = rospy.Publisher("/move_base/IPAEBandPlannerROS/goal_reached_topic", Bool, queue_size=1)
+        self.reached_last_goal = False
+        self.time_threshold = rospy.get_param("/atf_test/time_threshold", 12.0)
+        self.loop_rate = rospy.Rate(rospy.get_param("/move_base/controller_frequency", 20))
+        self.last_time_stamp = rospy.Time.now()
 
         # get starting pose
         start_pose_information = rospy.get_param("/atf_test/start_pose")
@@ -32,11 +38,10 @@ class Application:
         self.start_pose.pose.pose.orientation.z = start_pose_information["orientation_z"]
         self.start_pose.pose.pose.orientation.w = start_pose_information["orientation_w"]
 
-        self.nr_of_goals = rospy.get_param("/atf_test/nr_of_goals")
-
         # get goals
         self.goals = []
         goal_information = rospy.get_param("/atf_test/goals")
+        self.nr_of_goals = len(goal_information)
         for x in range(0, self.nr_of_goals):
             goal_to_set = PoseStamped()
             goal_to_set.header.frame_id = "map"
@@ -48,19 +53,50 @@ class Application:
             goal_to_set.pose.orientation.z = goal_information[x]["orientation_z"]
             goal_to_set.pose.orientation.w = goal_information[x]["orientation_w"]
             self.goals.append(goal_to_set)
+        self.goals.reverse()
 
+        # Publish starting pose
         rospy.sleep(5)
         self.start_pose.header.stamp = rospy.Time.now()
         self.pose_pub_.publish(self.start_pose)
+        rospy.sleep(5)
+
+
+    def goal_reached_callback(self, data):
+        # assuming we only get a callback if the goal was reached i.e. data itself is irrelevant
+        # check if last goal was reached ..
+        if self.nr_of_goals == 0:
+            self.reached_last_goal = True
+        # .. otherwise send the next one
+        else:
+            goal = self.goals.pop()
+            goal.header.stamp = rospy.Time.now()
+            self.goal_pub_.publish(goal)
+            self.nr_of_goals -=1
+            self.last_time_stamp = rospy.Time.now()
 
 
     def execute(self):
         self.atf.start("testblock_01")
 
-        for x in range(0, self.nr_of_goals):
-            self.goals[x].header.stamp = rospy.Time.now()
-            self.goal_pub_.publish(self.goals[x])
-            rospy.sleep(10) #TODO: send new goal once the previous one was reached and not after a fixed amount of time -> goal_reached_publisher in ipa_eband_planner/eband_trajectory_controller
+        if not self.nr_of_goals == 0:
+            # Publish initial goal
+            goal = self.goals.pop()
+            goal.header.stamp = rospy.Time.now()
+            self.goal_pub_.publish(goal)
+            self.nr_of_goals -=1
+            # Publish the remaining goals
+            self.last_time_stamp = rospy.Time.now()
+            while not self.reached_last_goal:
+                if (rospy.Time.now() - self.last_time_stamp).to_sec() > self.time_threshold:
+                    rospy.logwarn("Current goal could not be reached; triggering to publish the next goal")
+                    boo = Bool()
+                    self.goal_reached_pub_.publish(boo)
+                    self.last_time_stamp = rospy.Time.now()
+                else:
+                    self.loop_rate.sleep()
+        else:
+            rospy.logwarn("There are no goals defined; please make sure your robot environment yaml contains a list of goals")
 
         self.atf.stop("testblock_01")
         self.atf.shutdown()
@@ -68,8 +104,6 @@ class Application:
 class Test(unittest.TestCase):
     def setUp(self):
         self.app = Application()
-        self.app.initializeRobotAndGoals()
-        rospy.sleep(5)
 
     def tearDown(self):
         pass

@@ -12,6 +12,9 @@
 
     <arg name="gazebo_gui" default="false"/>
 
+    <!-- atf-test specific params for the application.py -->
+    <param name="/atf_test/time_threshold" value="30.0"/>
+
     <!-- launch files -->
     <include file="$(find cob_bringup_sim)/launch/robot.launch">
       <arg name="gui" default="$(arg gazebo_gui)"/>

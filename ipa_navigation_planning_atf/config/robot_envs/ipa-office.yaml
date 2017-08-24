@@ -7,8 +7,6 @@ additional_parameters: #{}                                # Name and value of ad
         "orientation_z": 0.0
         "orientation_w": 1.0
 
-    "/atf_test/nr_of_goals": 1
-
     "/atf_test/goals":
         - "position_x": 2.0
           "position_y": 6.0
