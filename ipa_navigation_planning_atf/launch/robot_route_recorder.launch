@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="robot_env" default="$(optenv ROBOT_ENV !!NO_ROBOT_ENV_SET!!)"/>
+
+  <node name="robot_route_recorder" pkg="ipa_navigation_planning_atf" type="robot_route_recorder" output="screen">
+    <param name="robot_env" value="$(arg robot_env)" type="str"/>
+    <param name="file_directory" value="/tmp/rrr/" type="str"/>
+    <remap from="start_pose_topic" to="/initialpose"/>
+    <remap from="goals_topic" to="/move_base_simple/goal"/>
+  </node>
+</launch>
