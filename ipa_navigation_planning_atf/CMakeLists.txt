@@ -3,6 +3,7 @@ project(ipa_navigation_planning_atf)
 add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
+  actionlib_msgs
   atf_core
   geometry_msgs
   #ipa_navigation_planning

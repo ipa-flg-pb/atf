@@ -9,7 +9,7 @@ from atf_core import ATF
 import tf
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
-from std_msgs.msg import Bool
+from actionlib_msgs.msg import GoalStatusArray
 
 
 class Application:
@@ -19,8 +19,7 @@ class Application:
         self.pose_pub_ = rospy.Publisher("/initialpose", PoseWithCovarianceStamped, queue_size=1)
         self.goal_pub_ = rospy.Publisher("/move_base_simple/goal", PoseStamped, queue_size=1)
 
-        self.goal_reached_sub_ = rospy.Subscriber("/move_base/IPAEBandPlannerROS/goal_reached_topic", Bool, self.goal_reached_callback)
-        self.goal_reached_pub_ = rospy.Publisher("/move_base/IPAEBandPlannerROS/goal_reached_topic", Bool, queue_size=1)
+        self.goal_reached_sub_ = rospy.Subscriber("/move_base/status", GoalStatusArray, self.goal_reached_callback)
         self.reached_last_goal = False
         self.time_threshold = rospy.get_param("/atf_test/time_threshold", 12.0)
         self.loop_rate = rospy.Rate(rospy.get_param("/move_base/controller_frequency", 20))
@@ -63,17 +62,20 @@ class Application:
 
 
     def goal_reached_callback(self, data):
-        # assuming we only get a callback if the goal was reached i.e. data itself is irrelevant
-        # check if last goal was reached ..
-        if self.nr_of_goals == 0:
-            self.reached_last_goal = True
-        # .. otherwise send the next one
-        else:
-            goal = self.goals.pop()
-            goal.header.stamp = rospy.Time.now()
-            self.goal_pub_.publish(goal)
-            self.nr_of_goals -=1
-            self.last_time_stamp = rospy.Time.now()
+        # make sure callback is not a redundant callback from the previous goal
+        if (rospy.Time.now() - self.last_time_stamp).to_sec() >= 1:
+            # goal_status == 3 corresponds to SUCCESS
+            if data.status_list[-1].status == 3:
+                # check if last goal was reached ..
+                if self.nr_of_goals == 0:
+                    self.reached_last_goal = True
+                # .. otherwise send the next one
+                else:
+                    goal = self.goals.pop()
+                    goal.header.stamp = rospy.Time.now()
+                    self.goal_pub_.publish(goal)
+                    self.nr_of_goals -=1
+                    self.last_time_stamp = rospy.Time.now()
 
 
     def execute(self):
@@ -90,9 +92,16 @@ class Application:
             while not self.reached_last_goal:
                 if (rospy.Time.now() - self.last_time_stamp).to_sec() > self.time_threshold:
                     rospy.logwarn("Current goal could not be reached; triggering to publish the next goal")
-                    boo = Bool()
-                    self.goal_reached_pub_.publish(boo)
-                    self.last_time_stamp = rospy.Time.now()
+                    # check if last goal was reached ..
+                    if self.nr_of_goals == 0:
+                        self.reached_last_goal = True
+                    # .. otherwise send the next one
+                    else:
+                        goal = self.goals.pop()
+                        goal.header.stamp = rospy.Time.now()
+                        self.goal_pub_.publish(goal)
+                        self.nr_of_goals -=1
+                        self.last_time_stamp = rospy.Time.now()
                 else:
                     self.loop_rate.sleep()
         else:
