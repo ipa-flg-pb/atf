@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="dir" default="$(find ipa_navigation_planning_atf)"/>
+  <rosparam file="$(arg dir)/config/robot_envs/ipa-apartment.yaml" command="load"/>
+
+  <node name="atf_bagfile_plotter" pkg="ipa_navigation_planning_atf" type="atf_bagfile_plotter.py" output="screen">
+    <!--<remap from="bag_directory_" to="/tmp/ipa_navigation_planning_atf/data"/>
+    <remap from="bag_name_" to="/ts0_c0_r0_e0_0"/>-->
+  </node>
+</launch>

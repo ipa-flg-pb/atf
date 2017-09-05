@@ -1,7 +1,19 @@
+# Here you have to add topics that are required to calculate your metrics during the analysing step:
+# The syntax is as follows:
+# metric:
+#   topics:
+#     - topic1
+#     - topic2
+#     ..
+#
+# Note that it should suffice if you add the topics to one metric even if it is required for more than one, BUT make sure that the metric you list the topics under
+# is actually present in your test config where you define which metrics you want to calculate
+
 path_length:                                          # Topics for the metric 'path_length'
   topics:
     - "/tf"
-#    - "/scan_unified"
+    - "/state_ekf"
+    - "/base/odometry_controller/odometry"
 #robot_bringup_launch: "launch/all.launch"             # Path to the robot bringup launch file
 wait_for_topics: []                                   # Names of the topics to wait for before beginning the test
 wait_for_services: []                                 # Names of the services to wait for before beginning the test

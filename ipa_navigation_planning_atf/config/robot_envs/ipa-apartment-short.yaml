@@ -1,0 +1,19 @@
+additional_parameters: #{}                                # Name and value of additional parameter which will be included in every recording test file
+    "/atf_test/start_pose":
+        "position_x": 0.0
+        "position_y": 0.0
+        "orientation_x": 0.0
+        "orientation_y": 0.0
+        "orientation_z": 0.0
+        "orientation_w": 1.0
+
+    "/atf_test/goals":
+        - "position_x": 3.5
+          "position_y": 0.0
+          "orientation_x": 0.0
+          "orientation_y": 0.0
+          "orientation_z": 0.0
+          "orientation_w": 1.0
+
+additional_arguments: #{}                                 # Name and value of additional arguments which will be included in every recording test file
+    "robot_env": ipa-apartment

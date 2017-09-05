@@ -353,6 +353,226 @@ var TestList = {
         },
         plotOptions: {},
         tooltip: plot_tooltip
+      },
+      acceleration_average: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Average acceleration based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Acceleration [m/s^2]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      acceleration_max: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Maximal acceleration based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Acceleration [m/s^2]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      acceleration_median: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Median of accelerations based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Acceleration [m/s^2]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      velocity_average: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Average velocity based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Velocity [m/s]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      velocity_max: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Maximal velocity based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Velocity [m/s]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      velocity_median: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Median of velocities based on tf'
+        },
+        yAxis: {
+          title: {
+            text: 'Velocity [m/s]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      acceleration_average_odom: {
+          chart: {
+              defaultSeriesType: 'column',
+              type: 'column',
+              zoomType: 'xy'
+          },
+          title: {
+              text: 'Average acceleration based on odometry'
+          },
+          yAxis: {
+              title: {
+                  text: 'Acceleration [m/s^2]'
+              }
+          },
+          xAxis: {
+              labels: {
+                  enabled: false
+              }
+          },
+          plotOptions: {},
+          tooltip: plot_tooltip
+      },
+      velocity_average_odom: {
+          chart: {
+              defaultSeriesType: 'column',
+              type: 'column',
+              zoomType: 'xy'
+          },
+          title: {
+              text: 'Average velocity based on odometry'
+          },
+          yAxis: {
+              title: {
+                  text: 'Velocity [m/s]'
+              }
+          },
+          xAxis: {
+              labels: {
+                  enabled: false
+              }
+          },
+          plotOptions: {},
+          tooltip: plot_tooltip
+      },
+      velocity_max_odom: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Maximal velocity based on odometry'
+        },
+        yAxis: {
+          title: {
+            text: 'Velocity [m/s]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
+      },
+      velocity_median_odom: {
+        chart: {
+          defaultSeriesType: 'column',
+          type: 'column',
+          zoomType: 'xy'
+        },
+        title: {
+          text: 'Median of velocities based on odometry'
+        },
+        yAxis: {
+          title: {
+            text: 'Velocity [m/s]'
+          }
+        },
+        xAxis: {
+          labels: {
+            enabled: false
+          }
+        },
+        plotOptions: {},
+        tooltip: plot_tooltip
       }
     };
 
@@ -386,7 +606,7 @@ var TestList = {
       $.each(testblock_data, function (metric_name, metric_list) {
         //console.log("metric_name=", metric_name);
         //console.log("metric_list=", metric_list);
-        if ((metric_name == 'time') || (metric_name == 'path_length') || (metric_name == 'publish_rate') || (metric_name == 'interface'))
+        if ((metric_name == 'time') || (metric_name == 'path_length') || (metric_name == 'publish_rate') || (metric_name == 'interface') || (metric_name == 'acceleration_average') || (metric_name == 'acceleration_max') || (metric_name == 'acceleration_median') || (metric_name == 'velocity_average') || (metric_name == 'velocity_max') || (metric_name == 'velocity_median') || (metric_name == 'acceleration_average_odom') || (metric_name == 'velocity_average_odom') || (metric_name == 'velocity_max_odom') || (metric_name == 'velocity_median_odom'))
         {
           number_of_entries = Object.keys(metric_list).length
           //console.log("number_of_entries=", number_of_entries)
@@ -400,6 +620,16 @@ var TestList = {
             if (metric_name == 'path_length') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
             if (metric_name == 'publish_rate') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['topic'] + ")"
             if (metric_name == 'interface') chart_legend_name = testblock_name + "<br>(" + metric_data['details'] + ")"
+            if (metric_name == 'acceleration_average') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'acceleration_max') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'acceleration_median') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'velocity_average') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'velocity_max') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'velocity_median') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['root_frame'] + " to " + metric_data['details']['measured_frame'] + ")"
+            if (metric_name == 'acceleration_average_odom') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['odom_topic'] + ")"
+            if (metric_name == 'velocity_average_odom') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['odom_topic'] + ")"
+            if (metric_name == 'velocity_max_odom') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['odom_topic'] + ")"
+            if (metric_name == 'velocity_median_odom') chart_legend_name = testblock_name + "<br>(" + metric_data['details']['odom_topic'] + ")"
             
             if (!data_per_test.hasOwnProperty(metric_name)) data_per_test[metric_name] = [];
             

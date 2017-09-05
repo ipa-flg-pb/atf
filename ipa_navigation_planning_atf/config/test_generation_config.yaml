@@ -11,7 +11,7 @@ bagfile_output: /tmp/ipa_navigation_planning_atf/data/                        # 
 json_output: /tmp/ipa_navigation_planning_atf/results_json/                   # Folder for the json files output
 yaml_output: /tmp/ipa_navigation_planning_atf/results_yaml/                   # Folder for the yaml files output
 
-speed_factor_analysis: 10.0                                         # Factor to speedup analysis (can lower accuracy if to fast, especially path_length)
+speed_factor_analysis: 1.0                                         # Factor to speedup analysis (can lower accuracy if to fast, especially path_length)
 
 time_limit_recording: 600.0                                          # Time limit in seconds for recording
 time_limit_analysing: 600.0                                          # Time limit in seconds for analysing

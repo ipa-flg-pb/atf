@@ -9,6 +9,32 @@ obstacle_distance:
 publish_rate:
   handler: CalculatePublishRateParamHandler
 interface:
-    handler: CalculateInterfaceParamHandler
+  handler: CalculateInterfaceParamHandler
+orientation_variation_average:
+  handler: CalculateOrientationVariationAverageParamHandler
+orientation_variation_max:
+  handler: CalculateOrientationVariationMaxParamHandler
+orientation_variation_median:
+  handler: CalculateOrientationVariationMedianParamHandler
+velocity_average:
+  handler: CalculateVelocityAverageParamHandler
+velocity_max:
+  handler: CalculateVelocityMaxParamHandler
+velocity_median:
+  handler: CalculateVelocityMedianParamHandler
+acceleration_average:
+  handler: CalculateAccelerationAverageParamHandler
+acceleration_max:
+  handler: CalculateAccelerationMaxParamHandler
+acceleration_median:
+  handler: CalculateAccelerationMedianParamHandler
+acceleration_average_odom:
+  handler: CalculateAccelerationAverageOdomParamHandler
+velocity_average_odom:
+  handler: CalculateVelocityAverageOdomParamHandler
+velocity_max_odom:
+  handler: CalculateVelocityMaxOdomParamHandler
+velocity_median_odom:
+  handler: CalculateVelocityMedianOdomParamHandler
 # example:
 #   handler: ExampleParamHandler

@@ -57,7 +57,7 @@ void RobotRouteRecorder::makeFileFromData()
   file << "        \"orientation_z\": " + std::to_string(start_pose_.pose.orientation.z) +"\n";
   file << "        \"orientation_w\": " + std::to_string(start_pose_.pose.orientation.w) +"\n";
   file << "    \"/atf_test/goals\":\n";
-  for (int i = 0; i < goals_.size(); i++)
+  for (size_t i = 0; i < goals_.size(); i++)
   {
     file << "        - \"position_x\": " + std::to_string(goals_[i].position.x) +"\n";
     file << "          \"position_y\": " + std::to_string(goals_[i].position.y) +"\n";

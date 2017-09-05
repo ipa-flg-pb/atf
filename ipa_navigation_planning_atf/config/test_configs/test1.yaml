@@ -21,20 +21,38 @@
 #              <metric1>: []
 #              <metric2>:
 #              ..
+#
+# The metrics are calculated from the bagfile recorded during the recording step of the test. However if one of your metrics depends on a topic make sure it is recorded by
+# adding it to the recorded topics in the robots config. See the raw3-3.yaml for a more detailed description.
 
 testblock_01:
   time: []
-  publish_rate:
-    - topic: /scan_unified
-    - topic: /move_base/local_costmap/costmap
   path_length:
     - root_frame: map
       measured_frame: base_link
-#testblock_02:
-#  time: []
-#  publish_rate:
-#    - topic: /scan_unified
-#    - topic: /move_base/local_costmap/costmap
-#  path_length:
-#    - root_frame: map
-#      measured_frame: base_link
+  #velocity_average:
+    #- root_frame: map
+      #measured_frame: base_link
+  #velocity_max:
+    #- root_frame: map
+      #measured_frame: base_link
+  #velocity_median:
+    #- root_frame: map
+      #measured_frame: base_link
+  #acceleration_average:
+    #- root_frame: map
+      #measured_frame: base_link
+  #acceleration_max:
+    #- root_frame: map
+      #measured_frame: base_link
+  #acceleration_median:
+    #- root_frame: map
+      #measured_frame: base_link
+  #acceleration_average_odom:
+    #- odom_topic: /base/odometry_controller/odometry
+  #velocity_average_odom:
+    #- odom_topic: /base/odometry_controller/odometry
+  #velocity_max_odom:
+    #- odom_topic: /base/odometry_controller/odometry
+  #velocity_median_odom:
+    #- odom_topic: /base/odometry_controller/odometry
