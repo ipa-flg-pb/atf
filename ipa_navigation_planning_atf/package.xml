@@ -16,7 +16,7 @@
     <depend>actionlib_msgs</depend>
     <depend>atf_core</depend>
     <depend>geometry_msgs</depend>
-    <!--<depend>ipa_navigation_planning</depend>-->
+    <depend>nav_msgs</depend>
     <depend>roscpp</depend>
     <depend>roslaunch</depend>
     <depend>rospy</depend>

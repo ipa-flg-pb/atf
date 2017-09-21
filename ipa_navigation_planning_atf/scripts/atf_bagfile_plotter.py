@@ -9,10 +9,15 @@ from geometry_msgs.msg import Vector3
 import numpy
 import matplotlib.pyplot as plt
 
+import os
+
 class ATFBagfilePlotter:
     def __init__(self):
-        self.bag_directory = "/tmp/ipa_navigation_planning_atf/data/"
-        self.bag_name = "ts0_c0_r0_e0_0"
+        self.bag_directory = rospy.get_param("/test_gen/bagfile_output", '/tmp/ipa_navigation_planning_atf/data/')
+        self.bags = []
+        for f in os.listdir(self.bag_directory):
+            if f.endswith('.bag'):
+                self.bags.append(f)
         # vel = velocity, acc = acceleration
         self.color_coding = {'vel': 'r', 'acc': 'b', 'jerk': 'g'}
         self.col_names = {'r': 'red', 'b': 'blue', 'g': 'green'}
@@ -22,12 +27,31 @@ class ATFBagfilePlotter:
         # twist values extracted from odometry
         self.odom_values = []
         self.ekf_values = []
-        self.plot_path = True
-        self.plot_odom = True
-        self.use_grid = True
-        self.odometry_frequency = 0.02 # Default is 0.02 corresponding to 50Hz
-        self.use_smoothing = True
-        self.plot_route = True
+
+        # For a detailed description of what each parameter does see the bagfile_plotter_config.yaml
+        self.plot_path = rospy.get_param("/bagfile_plotter/plot_path", True)
+        self.plot_odom = rospy.get_param("/bagfile_plotter/plot_odom", True)
+        self.use_grid = rospy.get_param("/bagfile_plotter/show_grid", True)
+        self.odometry_frequency = 0.02 # Default is 0.02 corresponding to 50Hz # TODO param this from ?move_base parameters?
+        self.use_smoothing = rospy.get_param("/bagfile_plotter/use_smoothing", True)
+        self.plot_route = rospy.get_param("/bagfile_plotter/plot_route", True)
+
+        self.figure_counter = 0
+
+    def evaluate(self):
+        if len(self.bags) == 0:
+            rospy.logerr('No bagfiles found')
+            return
+        while not len(self.bags) == 0:
+            show_plot = False
+            bag = self.bags.pop()
+            self.bag_name = os.path.splitext(bag)[0]
+            if self.get_data_from_bagfile():
+                abp.get_output()
+                show_plot = True
+        rospy.loginfo('Number of figures: %i', self.figure_counter)
+        if show_plot == True:
+            plt.show()
 
 
     def get_data_from_bagfile(self):
@@ -81,11 +105,11 @@ class ATFBagfilePlotter:
         return ret
 
     def get_output(self):
-        figure_counter = 0
         # ekf based
         if self.plot_path:
-            figure_counter += 1
-            plt.figure(figure_counter)
+            self.figure_counter += 1
+            plt.figure(self.figure_counter)
+            plt.title(self.bag_name + ' : Path')
             x_values, y_values = self.get_path_coordinates()
             # Need the axis option so that x and y axis are scaled equally
             axis_lb, axis_ub = self.get_axis_arguments(x_values, y_values)
@@ -106,8 +130,8 @@ class ATFBagfilePlotter:
                 plt.plot(x_values, y_values, 'k')
         # odometry based
         if self.plot_odom:
-            figure_counter +=1
-            plt.figure(figure_counter)
+            self.figure_counter +=1
+            plt.figure(self.figure_counter)
             time_values = self.get_time_values()
             x_lin_vel, y_lin_vel, ang_vel = self.get_velocity_values()
             x_lin_acc, y_lin_acc, ang_acc = self.get_acceleration_values()
@@ -121,6 +145,7 @@ class ATFBagfilePlotter:
             else:
                 x_lin_acc_s, y_lin_acc_s, ang_acc_s, x_lin_jer_s, y_lin_jer_s, ang_jer_s = x_lin_acc, y_lin_acc, ang_acc, x_lin_jer, y_lin_jer, ang_jer
             plt.subplot(311)
+            plt.title(self.bag_name + ' : Momentum')
             plt.ylabel('x')
             plt.grid(self.use_grid)
             plt.plot(time_values, x_lin_vel, self.color_coding['vel'],
@@ -145,9 +170,6 @@ class ATFBagfilePlotter:
                        'Velocity('+ self.col_names[self.color_coding['vel']] +'), acceleration('+ self.col_names[self.color_coding['acc']] +
                        '), jerk('+ self.col_names[self.color_coding['jerk']] +') in m/s, m/s^2, m/s^3')
             plt.ylabel('theta')
-#            plt.ylabel('Velocity(red), acceleration(blue), jerk(green) in m/s, m/s^2, m/s^3')
-        rospy.loginfo('Number of figures: %i', figure_counter)
-        plt.show()
 
     def filter_data(self):
         # Make sure the difference of timestamps of two successive msgs is greater than topic_frequency; this is only necessary for odometry for higher precision of differentials
@@ -161,7 +183,7 @@ class ATFBagfilePlotter:
                 tmp_y.append(self.odom_values[i])
             else:
                 counter += 1
-        rospy.loginfo('%i of the in total %i odometry messages have been discarded', counter, len(self.odom_values))
+        rospy.loginfo(self.bag_name + ' : %i of the in total %i odometry messages have been discarded', counter, len(self.odom_values))
         self.odom_time_values = tmp_x
         self.odom_values = tmp_y
 
@@ -335,5 +357,4 @@ if __name__ == '__main__':
     rospy.loginfo('Starting atf_bagfile_plotter')
     rospy.init_node('atf_bagfile_plotter')
     abp = ATFBagfilePlotter()
-    if abp.get_data_from_bagfile():
-        abp.get_output()
+    abp.evaluate()

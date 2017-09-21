@@ -6,7 +6,7 @@ import sys
 
 from atf_core import ATF
 
-import tf
+import tf #this should not be necessary
 from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from actionlib_msgs.msg import GoalStatusArray

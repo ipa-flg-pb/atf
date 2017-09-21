@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   atf_core
   geometry_msgs
-  #ipa_navigation_planning
+  nav_msgs
   roscpp
   roslaunch
   rospy

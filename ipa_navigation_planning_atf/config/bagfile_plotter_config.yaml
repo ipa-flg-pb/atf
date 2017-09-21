@@ -1,0 +1,18 @@
+##########################################
+# Parameters for the atf_bagfile_plotter #
+##########################################
+
+# Wheter to plot the path covered by the robot (based on state_ekf)
+plot_path: True
+
+# Whether to plot the velocity, acceleration and jerk of the robot (based on odometry)
+plot_odom: True
+
+# Wheter to show a grid in the plots
+show_grid: True
+
+# Wheter to use the smoothing function on the acceleration and jerk y-values
+use_smoothing: True
+
+# Whether to plot the start pose and goals defined in the robot_env config in the path plot; this only does something if plot_path is True
+plot_route: True
