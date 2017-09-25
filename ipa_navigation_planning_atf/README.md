@@ -4,7 +4,7 @@ Please view the [README](../README.md) in the parent directory for information r
 
 ### Layout
 
-This atf subdirectory implements an ATF test to record bagfiles of the robot following a predefined route (see [robot-environment-config](#####Robot Environment Config)) containing data relating to the current robot position (state_ekf) and the current velocity (odometry). This information can then be presented in a 2D-plot with the atf_bagfile_plotter.
+This atf subdirectory implements an ATF test to record bagfiles of the robot following a predefined route (see [robot-environment-config](#####Robot_Environment_Config)) containing data relating to the current robot position (state_ekf) and the current velocity (odometry). This information can then be presented in a 2D-plot with the atf_bagfile_plotter.
 
 ### How-to
 
