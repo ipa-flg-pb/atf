@@ -1,15 +1,15 @@
-#ATF for ipa_navigation_planning repository
+# ATF for ipa_navigation_planning repository
 
 Please view the [README](../README.md) in the parent directory for information regarding the ATF.
 
-###Layout
+### Layout
 
 This atf subdirectory implements:
 1. An ATF test to record bagfiles of the robot following a predefined route (see [Robot-Environment-Config](#####Robot-Environment-Config)) containing data relating to the current robot position (state_ekf) and the current velocity (odometry).
 1. The the atf_bagfile_plotter which presents the recorded data from the bagfile as plots.
 1. The [robot_route_recorder](###Robot-Route-Recorder) that is a convenience tool for generating Robot Environment Config files.
 
-###How-to
+### How-to
 
 Please follow the installation steps described in the installation section of the aforementioned ATF README; then checkout this branch and run
 ```sh
@@ -33,21 +33,21 @@ and one showing the plots of velocity, acceleration and jerk in x-direction (lab
 
 The coordinates are relative to the robot-frame.
 
-###Config-Files
-#####Test-Generation-Config
-#####Test-Suites
-#####Bagfile-Plotter-Config
-#####Robot-Environment-Config
-#####Robot-Config
-#####Test-Config
+### Config-Files
+##### Test-Generation-Config
+##### Test-Suites
+##### Bagfile-Plotter-Config
+##### Robot-Environment-Config
+##### Robot-Config
+##### Test-Config
 
-###ATF-Bagfile-Plotter
+### ATF-Bagfile-Plotter
 
 The atf_bagfile_plotter (abp) searches the bagfile_output directory specified in the [Test-Generation-Config](####Test-Generation-Config) for bagfiles and makes two plots for each bagfile:
 * A plot showing the route covered by the robot
 * A plot showing different velocity, acceleration and jerk values based on the odometry topic
 
-###Robot-Route-Recorder
+### Robot-Route-Recorder
 
 The robot_route_recorder (rrr) is used to automatically generate [robot_envs yaml files](#####Robot-Environment-Config) (reyf), specifically tailored for ipa_naviagition_planning_atf.
 
