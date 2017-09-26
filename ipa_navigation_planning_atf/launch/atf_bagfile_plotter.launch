@@ -1,12 +1,17 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="dir" default="$(find ipa_navigation_planning_atf)"/>
-  <rosparam file="$(arg dir)/config/robot_envs/ipa-apartment.yaml" command="load"/>
+  <arg name="robot_env_config" default="ipa-apartment"/>
+  <arg name="robot_config" default="raw3-3"/>
+
   <rosparam file="$(arg dir)/config/test_generation_config.yaml" command="load" ns="test_gen"/>
+  <rosparam file="$(arg dir)/config/robot_envs/$(arg robot_env_config).yaml" command="load">
+    <param name="robot_env" value="$(arg robot_env)"/>
+  </rosparam>
+  <rosparam file="$(arg dir)/config/robots/$(arg robot_config).yaml" command="load">
+    <param name="robot" value="$(arg robot)"/>
+  </rosparam>
   <rosparam file="$(arg dir)/config/bagfile_plotter_config.yaml" command="load" ns="bagfile_plotter"/>
 
-  <node name="atf_bagfile_plotter" pkg="ipa_navigation_planning_atf" type="atf_bagfile_plotter.py" output="screen">
-    <!--<remap from="bag_directory" to="/tmp/ipa_navigation_planning_atf/data"/>
-    <remap from="bag_name" to="/ts0_c0_r0_e0_0"/>-->
-  </node>
+  <node name="atf_bagfile_plotter" pkg="ipa_navigation_planning_atf" type="atf_bagfile_plotter.py" output="screen"/>
 </launch>

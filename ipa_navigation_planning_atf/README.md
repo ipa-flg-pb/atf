@@ -29,7 +29,7 @@ Now you can run the ATF test from your atf_ws with
 ```sh
 catkin_make atf_ipa_navigation_planning_atf_recording -j1
 ```
-which will start a gazebo simulation (therefore `-j1`) in the recording step of the atf_test during which bagfiles containing state_ekf and odometry data will be recorded. Now run the [ATF-Bagfile-Plotter](###ATF-Bagfile-Plotter) with
+which will start a gazebo simulation (therefore `-j1`) in the recording step of the atf_test during which bagfiles containing state_ekf and odometry data will be recorded. Note that the recording step also triggers the cleaning step erasing all bagfiles in the folder specified in the [Test-Generation-Config](#####Test-Generation-Config). Now run the [ATF-Bagfile-Plotter](###ATF-Bagfile-Plotter) with
 ```sh
 roslaunch ipa_navigation_planning_atf atf_bagfile_plotter.launch
 ```
@@ -86,8 +86,9 @@ This file defines the test_blocks that should be recorded in the app_executable 
 ### ATF-Bagfile-Plotter
 
 The atf_bagfile_plotter (abp) searches the bagfile_output directory specified in the [Test-Generation-Config](####Test-Generation-Config) for bagfiles and makes two plots for each bagfile:
-* A plot showing the route covered by the robot
-* A plot showing different velocity, acceleration and jerk values based on the odometry topic
+* A plot showing the route covered by the robot (Path plot)
+* A plot showing different velocity, acceleration and jerk values based on the odometry topic (Momentum plot)
+Note: Make sure to enter the correct values for robot and especially robot_env in the atf_bagfile_plotter.launch file; those are **NOT** automatically read from the config files. This will lead to the abp plotting the goals from a potentially wrong route in the path plot.
 
 ### Robot-Route-Recorder
 

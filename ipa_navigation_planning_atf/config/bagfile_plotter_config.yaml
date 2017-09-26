@@ -5,8 +5,15 @@
 # Wheter to plot the path covered by the robot (based on state_ekf)
 plot_path: True
 
-# Whether to plot the velocity, acceleration and jerk of the robot (based on odometry)
+# Whether to plot the velocity, acceleration and jerk of the robot (based on odometry); each of those can be selected ordeselected with the show_* parameter
 plot_odom: True
+
+show_vel: True
+show_acc: True
+show_jer: True
+
+# Whether to show the boxplots
+box_plots: True
 
 # Wheter to show a grid in the plots
 show_grid: True
@@ -16,3 +23,15 @@ use_smoothing: True
 
 # Whether to plot the start pose and goals defined in the robot_env config in the path plot; this only does something if plot_path is True
 plot_route: True
+
+# Whether to plot points with labels indicating the time points
+plot_time_points: False
+
+# Minimal time difference between to time points
+time_point_dist: 2.0
+
+# The length of the arrow representing the start_pose of the robot
+start_arrow_length: 0.3
+
+# The length of the arrows representing the goal_poses
+goal_arrow_length: 0.2
