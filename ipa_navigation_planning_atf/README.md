@@ -29,19 +29,11 @@ Now you can run the ATF test from your atf_ws with
 ```sh
 catkin_make atf_ipa_navigation_planning_atf_recording -j1
 ```
-which will start a gazebo simulation (therefore `-j1`) in the recording step of the atf_test during which bagfiles containing state_ekf and odometry data will be recorded. Note that the recording step also triggers the cleaning step erasing all bagfiles in the folder specified in the [Test-Generation-Config](#####Test-Generation-Config). Now run the [ATF-Bagfile-Plotter](###ATF-Bagfile-Plotter) with
+which will start a gazebo simulation (therefore `-j1`) in the recording step of the atf_test during which bagfiles containing state_ekf and odometry data will be recorded. Note that the recording step also triggers the cleaning step erasing all the existing bagfiles in the folder specified in the [Test-Generation-Config](#####Test-Generation-Config) before recording the new ones. Now run the [ATF-Bagfile-Plotter](###ATF-Bagfile-Plotter) with
 ```sh
 roslaunch ipa_navigation_planning_atf atf_bagfile_plotter.launch
 ```
-This will open two figures for each recorded bagfile. One showing the path covered by the robot during the simulation
-
-<img src="doc/path.png" width="500">
-
-and one showing the plots of velocity, acceleration and jerk in x-direction (labeled x), in y-direction (labeled y) and around the z-axis (labeled theta).
-
-<img src="doc/odom.png" width="500">
-
-The coordinates are relative to the robot-frame.
+to present the recorded data. For more details read the section concerning the [ATF-Bagfile-Plotter](###ATF-Bagfile-Plotter).
 
 ### Config-Files
 ##### Test-Generation-Config
@@ -85,9 +77,15 @@ This file defines the test_blocks that should be recorded in the app_executable 
 
 ### ATF-Bagfile-Plotter
 
-The atf_bagfile_plotter (abp) searches the bagfile_output directory specified in the [Test-Generation-Config](####Test-Generation-Config) for bagfiles and makes two plots for each bagfile:
-* A plot showing the route covered by the robot (Path plot)
-* A plot showing different velocity, acceleration and jerk values based on the odometry topic (Momentum plot)
+The atf_bagfile_plotter (abp) searches the bagfile_output directory specified in the [Test-Generation-Config](####Test-Generation-Config) for bagfiles and makes three plots for each bagfile:
+* A plot showing the route covered by the robot, the start position and goals and the position of the robot at certain timestamps (Path plot).
+<img src="doc/path.png" width="700">
+* A plot showing different velocity, acceleration and jerk values based on the odometry topic ordered by direction relative to the robot i.e. in x-direction labeled 'x', y-direction labeled'y' and rotation around the z-axis labeled 'theta' (Momentum plot).
+<img src="doc/odom.png" width="700">
+* A plot presenting the velocity, acceleration and jerk in boxplots ordered and labeled the same way as the Momentum plot.
+<img src="doc/box.png" width="700">
+Note that most of the things presented in the plots and the plots themselves can be switched on and off in the [Bagfile-Plotter-Config](#####Bagfile-Plotter-Config).
+
 Note: Make sure to enter the correct values for robot and especially robot_env in the atf_bagfile_plotter.launch file; those are **NOT** automatically read from the config files. This will lead to the abp plotting the goals from a potentially wrong route in the path plot.
 
 ### Robot-Route-Recorder
